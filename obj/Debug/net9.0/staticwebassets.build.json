@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "Dlh6CxJ0ujYxsIrXM/LKA6NyoT+fkndWC1SMMXzyli8=",
+  "Source": "IdentityJwtWether",
+  "BasePath": "_content/IdentityJwtWether",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
