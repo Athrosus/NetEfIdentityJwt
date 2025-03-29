@@ -3,6 +3,7 @@ using IdentityJwtWether.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityJwtWether.Controllers
 {
@@ -50,17 +51,15 @@ namespace IdentityJwtWether.Controllers
             return Ok(new { token });
         }
 
-        // DELETE: api/User/Delete
-        // Requires the user to be authenticated with a valid JWT.
-        [HttpDelete("Delete")]
+        // DELETE: api/User/Delete/{email}
+        [HttpDelete("Delete/{email}")]
         [Authorize]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(string email)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userId == null)
-                return Unauthorized();
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest("Email is required.");
 
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return NotFound("User not found.");
 
@@ -69,6 +68,15 @@ namespace IdentityJwtWether.Controllers
                 return BadRequest(result.Errors);
 
             return Ok("User deleted successfully.");
+        }
+
+        // api/User/All
+        [HttpGet("All")]
+        [Authorize]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = await _userManager.Users.ToListAsync();
+            return Ok(users);
         }
     }
 
