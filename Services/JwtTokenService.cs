@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityJwtWether.Services
+namespace IdentityJwtWeather.Services
 {
     public interface IJwtTokenService
     {

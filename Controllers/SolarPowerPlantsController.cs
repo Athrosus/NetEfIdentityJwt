@@ -1,11 +1,11 @@
-﻿using IdentityJwtWether.Data.Models;
-using IdentityJwtWether.Data;
+﻿using IdentityJwtWeather.Data.Models;
+using IdentityJwtWeather.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
-namespace IdentityJwtWether.Controllers
+namespace IdentityJwtWeather.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -120,6 +120,7 @@ namespace IdentityJwtWether.Controllers
         {
             return _context.SolarPowerPlants.Any(e => e.Id == id);
         }
+
         public class SolarPowerPlantObject
         {
             public string Name { get; set; } = "";

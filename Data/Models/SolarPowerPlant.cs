@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.InteropServices;
 
-namespace IdentityJwtWether.Data.Models
+namespace IdentityJwtWeather.Data.Models
 {
     public class SolarPowerPlant
     {

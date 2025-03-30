@@ -1,5 +1,5 @@
-using IdentityJwtWether.Data;
-using IdentityJwtWether.Services;
+using IdentityJwtWeather.Data;
+using IdentityJwtWeather.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +42,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddTransient<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddHttpClient<IWeatherService, WeatherApiService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["Weather:BaseUrl"]!);
+});
 
 var app = builder.Build();
 

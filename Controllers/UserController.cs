@@ -1,11 +1,11 @@
 ﻿using System.Security.Claims;
-using IdentityJwtWether.Services;
+using IdentityJwtWeather.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityJwtWether.Controllers
+namespace IdentityJwtWeather.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

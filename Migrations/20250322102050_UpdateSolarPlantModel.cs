@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace IdentityJwtWether.Migrations
+namespace IdentityJwtWeather.Migrations
 {
     /// <inheritdoc />
     public partial class UpdateSolarPlantModel : Migration

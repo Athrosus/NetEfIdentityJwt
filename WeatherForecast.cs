@@ -1,4 +1,4 @@
-namespace IdentityJwtWether
+namespace IdentityJwtWeather
 {
     public class WeatherForecast
     {

@@ -1,6 +1,22 @@
 [
   {
-    "ContainingType": "IdentityJwtWether.Controllers.SolarPowerPlantsController",
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPlantProductionController",
+    "Method": "GetProductionData",
+    "RelativePath": "api/SolarPlantProduction",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "IdentityJwtWeather.Controllers.SolarPlantProductionController\u002BProductionRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "GetAll",
     "RelativePath": "api/SolarPowerPlants",
     "HttpMethod": "GET",
@@ -9,7 +25,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[IdentityJwtWether.Data.Models.SolarPowerPlant, IdentityJwtWether, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[IdentityJwtWeather.Data.Models.SolarPowerPlant, IdentityJwtWeather, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -20,7 +36,7 @@
     ]
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.SolarPowerPlantsController",
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "Create",
     "RelativePath": "api/SolarPowerPlants",
     "HttpMethod": "POST",
@@ -29,13 +45,13 @@
     "Parameters": [
       {
         "Name": "plantObject",
-        "Type": "IdentityJwtWether.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
+        "Type": "IdentityJwtWeather.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "IdentityJwtWether.Data.Models.SolarPowerPlant",
+        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -46,7 +62,7 @@
     ]
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.SolarPowerPlantsController",
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "Get",
     "RelativePath": "api/SolarPowerPlants/{id}",
     "HttpMethod": "GET",
@@ -61,7 +77,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "IdentityJwtWether.Data.Models.SolarPowerPlant",
+        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -72,7 +88,7 @@
     ]
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.SolarPowerPlantsController",
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "Update",
     "RelativePath": "api/SolarPowerPlants/{id}",
     "HttpMethod": "PUT",
@@ -86,13 +102,13 @@
       },
       {
         "Name": "plantObject",
-        "Type": "IdentityJwtWether.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
+        "Type": "IdentityJwtWeather.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "IdentityJwtWether.Data.Models.SolarPowerPlant",
+        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -103,7 +119,7 @@
     ]
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.SolarPowerPlantsController",
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "Delete",
     "RelativePath": "api/SolarPowerPlants/{id}",
     "HttpMethod": "DELETE",
@@ -119,7 +135,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.UserController",
+    "ContainingType": "IdentityJwtWeather.Controllers.UserController",
     "Method": "GetAllUsers",
     "RelativePath": "api/User/All",
     "HttpMethod": "GET",
@@ -129,7 +145,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.UserController",
+    "ContainingType": "IdentityJwtWeather.Controllers.UserController",
     "Method": "Delete",
     "RelativePath": "api/User/Delete/{email}",
     "HttpMethod": "DELETE",
@@ -145,7 +161,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.UserController",
+    "ContainingType": "IdentityJwtWeather.Controllers.UserController",
     "Method": "Login",
     "RelativePath": "api/User/Login",
     "HttpMethod": "POST",
@@ -154,14 +170,14 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "IdentityJwtWether.Controllers.LoginModel",
+        "Type": "IdentityJwtWeather.Controllers.LoginModel",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.UserController",
+    "ContainingType": "IdentityJwtWeather.Controllers.UserController",
     "Method": "Register",
     "RelativePath": "api/User/Register",
     "HttpMethod": "POST",
@@ -170,14 +186,14 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "IdentityJwtWether.Controllers.RegisterModel",
+        "Type": "IdentityJwtWeather.Controllers.RegisterModel",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "IdentityJwtWether.Controllers.WeatherForecastController",
+    "ContainingType": "IdentityJwtWeather.Controllers.WeatherForecastController",
     "Method": "Get",
     "RelativePath": "WeatherForecast",
     "HttpMethod": "GET",
@@ -186,7 +202,7 @@
     "Parameters": [],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[IdentityJwtWether.WeatherForecast, IdentityJwtWether, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[IdentityJwtWeather.WeatherForecast, IdentityJwtWeather, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

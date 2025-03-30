@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityJwtWether.Controllers
+namespace IdentityJwtWeather.Controllers
 {
     [ApiController]
     [Route("[controller]")]

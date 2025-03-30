@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace IdentityJwtWether.Migrations
+namespace IdentityJwtWeather.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

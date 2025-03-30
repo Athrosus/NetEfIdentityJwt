@@ -1,6 +1,6 @@
-@IdentityJwtWether_HostAddress = http://localhost:5076
+@IdentityJwtWeather_HostAddress = http://localhost:5076
 
-GET {{IdentityJwtWether_HostAddress}}/weatherforecast/
+GET {{IdentityJwtWeather_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###

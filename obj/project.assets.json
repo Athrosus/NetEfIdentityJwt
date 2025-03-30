@@ -4709,9 +4709,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Projects\\DotNetExample\\NetEfIdentityJwt\\IdentityJwtWether.csproj",
-      "projectName": "IdentityJwtWether",
-      "projectPath": "D:\\Projects\\DotNetExample\\NetEfIdentityJwt\\IdentityJwtWether.csproj",
+      "projectUniqueName": "D:\\Projects\\DotNetExample\\NetEfIdentityJwt\\IdentityJwtWeather.csproj",
+      "projectName": "IdentityJwtWeather",
+      "projectPath": "D:\\Projects\\DotNetExample\\NetEfIdentityJwt\\IdentityJwtWeather.csproj",
       "packagesPath": "C:\\Users\\Korisnik\\.nuget\\packages\\",
       "outputPath": "D:\\Projects\\DotNetExample\\NetEfIdentityJwt\\obj\\",
       "projectStyle": "PackageReference",
