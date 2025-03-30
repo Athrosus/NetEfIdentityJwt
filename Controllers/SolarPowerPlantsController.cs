@@ -12,23 +12,26 @@ namespace IdentityJwtWeather.Controllers
     public class SolarPowerPlantsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<SolarPowerPlantsController> _logger;
 
-        public SolarPowerPlantsController(ApplicationDbContext context)
+        public SolarPowerPlantsController(ApplicationDbContext context, ILogger<SolarPowerPlantsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/SolarPowerPlant
         // Retrieves all solar power plants.
-        [HttpGet]
+        [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<SolarPowerPlant>>> GetAll()
         {
+            _logger.LogWarning("GetAll called at {Time}", DateTime.Now);
             return await _context.SolarPowerPlants.ToListAsync();
         }
 
         // GET: api/SolarPowerPlant/5
         // Retrieves a specific solar power plant by ID.
-        [HttpGet("{id}")]
+        [HttpGet("Get")]
         public async Task<ActionResult<SolarPowerPlant>> Get(int id)
         {
             var plant = await _context.SolarPowerPlants.FindAsync(id);
@@ -41,9 +44,8 @@ namespace IdentityJwtWeather.Controllers
 
         // POST: api/SolarPowerPlant
         // Creates a new solar power plant.
-        [HttpPost]
         [Authorize]
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<ActionResult<SolarPowerPlant>> Create(SolarPowerPlantObject plantObject)
         {
             var plant = new SolarPowerPlant
@@ -63,8 +65,8 @@ namespace IdentityJwtWeather.Controllers
 
         // PUT: api/SolarPowerPlant/5
         // Updates an existing solar power plant.
-        [HttpPut("{id}")]
         [Authorize]
+        [HttpPut("Update")]
         public async Task<ActionResult<SolarPowerPlant>> Update(int id, SolarPowerPlantObject plantObject)
         {
             var plant = await _context.SolarPowerPlants.FindAsync(id);
@@ -99,8 +101,8 @@ namespace IdentityJwtWeather.Controllers
 
         // DELETE: api/SolarPowerPlant/5
         // Deletes an existing solar power plant.
-        [HttpDelete("{id}")]
         [Authorize]
+        [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var plant = await _context.SolarPowerPlants.FindAsync(id);

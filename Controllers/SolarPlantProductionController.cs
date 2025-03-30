@@ -1,4 +1,6 @@
 ﻿using IdentityJwtWeather.Data;
+using IdentityJwtWeather.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,23 +14,26 @@ namespace IdentityJwtWeather.Controllers
     public class SolarPlantProductionController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWeatherService _weatherService;
 
-        public SolarPlantProductionController(ApplicationDbContext context)
+        public SolarPlantProductionController(ApplicationDbContext context, IWeatherService weatherService)
         {
             _context = context;
+            _weatherService = weatherService;
         }
 
-        [HttpPost]
+        [HttpPost("GetProductionData")]
+        [Authorize]
         public async Task<IActionResult> GetProductionData([FromBody] ProductionRequest request)
         {
             DateTime now = DateTime.Now;
-            TimeSpan timeSpan;
             TimeseriesWeatherData timeseriesWeatherData = new();
             TimeseriesProductionData timeseriesProductionData = new();
+            WeatherApiRequest weatherApiRequest = new();
 
-            if (request.To > request.From)
+            if(request.TimeSpan > TimeSpan.FromDays(5))
             {
-                return BadRequest("Start date needs to be before end date.");
+                return BadRequest("Do to api limitations there we cannot fetch forecast or actual data past 5 days");
             }
 
             var plant = await _context.SolarPowerPlants.FindAsync(request.PlantId);
@@ -37,47 +42,67 @@ namespace IdentityJwtWeather.Controllers
                 return NotFound();
             }
 
-            timeSpan = request.To - request.From;
-            if (request.Type == ProductionType.Actual && request.To <= now) 
+            if(request.Type == ProductionType.Forecast)
             {
-                // good
-            }
-            else if (request.Type == ProductionType.Forecast && request.From > now)
-            {
-                // good
+                var rawWeatherForecastData = await _weatherService.GetWeatherForecast(plant.Latitude, plant.Longitude);
+                if (rawWeatherForecastData == null)
+                {
+                    return BadRequest("No weather data available.");
+                }
+                timeseriesWeatherData = _weatherService.ForcastDataParser(rawWeatherForecastData, request.TimeSpan);
+
+                foreach (var WeatherData in timeseriesWeatherData.TimeseriesData)
+                {
+                    var production = ((100 - WeatherData.Clouds) / 100m) *
+                        _weatherService.GetSunshineInterpolation(WeatherData.Date) *
+                        plant.InstalledPower;
+
+                    ProductionData newproductionDate = new ProductionData
+                    {
+                        Date = WeatherData.Date,
+                        Production = production
+                    };
+                    timeseriesProductionData.TimeseriesData.Add(newproductionDate);
+                }
             }
             else
             {
-                return BadRequest("From or To dates were invalid for the selected ProductionType.\n Actual -> request.From <= now | Forecast -> request.From > now.");
+                var productionData = await _context.SolarPowerPlantProduction
+                    .Where(p => p.Date >= now - request.TimeSpan && p.Date <= now)
+                    .ToListAsync();
+
+                timeseriesProductionData.TimeseriesData = productionData.Select(p => new ProductionData
+                    {
+                        Date = p.Date,
+                        Production = p.Production
+                    }).ToList();
             }
 
-            foreach (var WeatherData in timeseriesWeatherData.TimeseriesData)
+            if (request.Granularity == TimeSeries.Hourly)
             {
-                var production = ((100 - WeatherData.Clouds) / 100m) * GetSunshineInterpolation(WeatherData.Date) * plant.InstalledPower;
-                ProductionData newproductionDate = new ProductionData
+                var hourlyGroups = timeseriesProductionData.TimeseriesData
+                    .GroupBy(x => new DateTime(
+                        x.Date.Year,
+                        x.Date.Month,
+                        x.Date.Day,
+                        x.Date.Hour, 0, 0, x.Date.Kind))
+                    .OrderBy(g => g.Key);
+                var newTimeseriesProductionData = new TimeseriesProductionData();
+                foreach (var group in hourlyGroups)
                 {
-                    Date = WeatherData.Date,
-                    Production = production,
-                    Clouds = WeatherData.Clouds
-                };
-                timeseriesProductionData.TimeseriesData.Add(newproductionDate);
+                    var production = group.Sum(x => x.Production);
+                    newTimeseriesProductionData.TimeseriesData.Add(new ProductionData
+                    {
+                        Date = group.Key,
+                        Production = production
+                    });
+                }
+                timeseriesProductionData = newTimeseriesProductionData;
             }
+
+
 
             return Ok(timeseriesProductionData);
-        }
-
-        public static decimal GetSunshineInterpolation(DateTime dateTime)
-        {
-            int hours = (int)dateTime.TimeOfDay.TotalHours;
-
-            if (hours <= 12)
-            {
-                return hours / 12m;
-            }
-            else
-            {
-                return (24 - hours) / 12m;
-            }
         }
 
         public enum TimeSeries
@@ -93,8 +118,7 @@ namespace IdentityJwtWeather.Controllers
         public class ProductionRequest
         {
             public int PlantId { get; set; }
-            public DateTime From { get; set; }
-            public DateTime To { get; set; }
+            public TimeSpan TimeSpan { get; set; }
             public ProductionType Type { get; set; } = ProductionType.Actual;
             public TimeSeries Granularity { get; set; } = TimeSeries.QuarterHourly; 
         }
@@ -109,7 +133,6 @@ namespace IdentityJwtWeather.Controllers
         }
         public class WeatherApiRequest
         {
-            public ProductionType Type { get; set; } = ProductionType.Actual;
             public TimeSeries Granularity { get; set; } = TimeSeries.QuarterHourly;
             public TimeSpan TimeSpan { get; set; }
         }
@@ -121,7 +144,6 @@ namespace IdentityJwtWeather.Controllers
         {
             public DateTime Date { get; set; }
             public decimal Production { get; set; }
-            public int Clouds { get; set; }
         }
     }
 }

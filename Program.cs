@@ -5,10 +5,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Serilog;
 using System.Net.Http.Headers;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DevelopmentConnection")));
@@ -47,6 +54,8 @@ builder.Services.AddHttpClient<IWeatherService, WeatherApiService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["Weather:BaseUrl"]!);
 });
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

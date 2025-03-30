@@ -1,8 +1,18 @@
 [
   {
+    "ContainingType": "IdentityJwtWeather.Controllers.SeedDataController",
+    "Method": "SeedData",
+    "RelativePath": "api/SeedData/SeedData",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "IdentityJwtWeather.Controllers.SolarPlantProductionController",
     "Method": "GetProductionData",
-    "RelativePath": "api/SolarPlantProduction",
+    "RelativePath": "api/SolarPlantProduction/GetProductionData",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -17,89 +27,12 @@
   },
   {
     "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
-    "Method": "GetAll",
-    "RelativePath": "api/SolarPowerPlants",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[IdentityJwtWeather.Data.Models.SolarPowerPlant, IdentityJwtWeather, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "Create",
-    "RelativePath": "api/SolarPowerPlants",
+    "RelativePath": "api/SolarPowerPlants/Create",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
-      {
-        "Name": "plantObject",
-        "Type": "IdentityJwtWeather.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
-    "Method": "Get",
-    "RelativePath": "api/SolarPowerPlants/{id}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
-    "Method": "Update",
-    "RelativePath": "api/SolarPowerPlants/{id}",
-    "HttpMethod": "PUT",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
       {
         "Name": "plantObject",
         "Type": "IdentityJwtWeather.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
@@ -121,7 +54,7 @@
   {
     "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
     "Method": "Delete",
-    "RelativePath": "api/SolarPowerPlants/{id}",
+    "RelativePath": "api/SolarPowerPlants/Delete",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -129,10 +62,87 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": true
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
+    "Method": "Get",
+    "RelativePath": "api/SolarPowerPlants/Get",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
+    "Method": "GetAll",
+    "RelativePath": "api/SolarPowerPlants/GetAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[IdentityJwtWeather.Data.Models.SolarPowerPlant, IdentityJwtWeather, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "IdentityJwtWeather.Controllers.SolarPowerPlantsController",
+    "Method": "Update",
+    "RelativePath": "api/SolarPowerPlants/Update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "plantObject",
+        "Type": "IdentityJwtWeather.Controllers.SolarPowerPlantsController\u002BSolarPowerPlantObject",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "IdentityJwtWeather.Data.Models.SolarPowerPlant",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "IdentityJwtWeather.Controllers.UserController",
