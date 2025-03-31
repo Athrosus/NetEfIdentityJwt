@@ -116,7 +116,7 @@ namespace IdentityJwtWeather.Controllers
             }
 
             _logger.LogInformation("GetProductionData -> succeeded with request: {request}", JsonSerializer.Serialize(request));
-            return Ok(timeSeriesProductionData);
+            return Ok(timeSeriesProductionData.TimeSeriesData);
         }
 
         public enum TimeSeries
