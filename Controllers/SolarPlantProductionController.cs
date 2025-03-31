@@ -30,23 +30,25 @@ namespace IdentityJwtWeather.Controllers
         public async Task<IActionResult> GetProductionData([FromBody] ProductionRequest request)
         {
             var now = DateTime.Now;
-            TimeseriesWeatherData timeseriesWeatherData = new();
-            TimeseriesProductionData timeseriesProductionData = new();
-            WeatherApiRequest weatherApiRequest = new();
+            TimeSeriesWeatherData timeSeriesWeatherData = new();
+            TimeseriesProductionData timeSeriesProductionData = new();
 
             if(request.TimeSpan > TimeSpan.FromDays(5))
             {
-                _logger.LogError("GetProductionData -> failed with BadRequest because request timespan was longer then 5 days: {request}", JsonSerializer.Serialize(request));
+                _logger.LogError("GetProductionData -> failed with BadRequest because request timespan was longer then 5 days: {request}",
+                    JsonSerializer.Serialize(request));
                 return BadRequest("Do to api limitations there we cannot fetch forecast or actual data past 5 days");
             }
 
             var plant = await _context.SolarPowerPlants.FindAsync(request.PlantId);
             if (plant == null)
             {
-                _logger.LogError("GetProductionData -> failed with NotFound because Solar Power Plant was not found by id: {request}", JsonSerializer.Serialize(request));
+                _logger.LogError("GetProductionData -> failed with NotFound because Solar Power Plant was not found by id: {request}",
+                    JsonSerializer.Serialize(request));
                 return NotFound();
             }
 
+            // Forcast Data
             if(request.Type == ProductionType.Forecast)
             {
                 var rawWeatherForecastData = await _weatherService.GetWeatherForecast(plant.Latitude, plant.Longitude);
@@ -55,9 +57,10 @@ namespace IdentityJwtWeather.Controllers
                     _logger.LogError("GetProductionData -> failed with BadRequest no weather data was available");
                     return BadRequest("No weather data available.");
                 }
-                timeseriesWeatherData = _weatherService.ForcastDataParser(rawWeatherForecastData, request.TimeSpan);
 
-                foreach (var WeatherData in timeseriesWeatherData.TimeseriesData)
+                timeSeriesWeatherData = _weatherService.ForcastDataParser(rawWeatherForecastData, request.TimeSpan);
+
+                foreach (var WeatherData in timeSeriesWeatherData.TimeSeriesData)
                 {
                     var production = ((100 - WeatherData.Clouds) / 100m) *
                         _weatherService.GetSunshineInterpolation(WeatherData.Date) *
@@ -68,51 +71,52 @@ namespace IdentityJwtWeather.Controllers
                         Date = WeatherData.Date,
                         Production = production
                     };
-                    timeseriesProductionData.TimeseriesData.Add(newproductionDate);
+
+                    timeSeriesProductionData.TimeSeriesData.Add(newproductionDate);
                 }
             }
+            // Actual Data
             else
             {
                 var productionData = await _context.SolarPowerPlantProduction
                     .Where(p => p.Date >= now - request.TimeSpan && p.Date <= now)
                     .ToListAsync();
 
-                if (productionData.Count == 0)
+                if (!productionData.Any())
                 {
                     _logger.LogError("GetProductionData -> failed with BadRequest no production data was found");
                     return BadRequest("No production data found.");
                 }
 
-                timeseriesProductionData.TimeseriesData = productionData.Select(p => new ProductionData
+                timeSeriesProductionData.TimeSeriesData = productionData.Select(p => new ProductionData
                     {
                         Date = p.Date,
                         Production = p.Production
                     }).ToList();
             }
 
+            // Granularity Hourly
             if (request.Granularity == TimeSeries.Hourly)
             {
-                var hourlyGroups = timeseriesProductionData.TimeseriesData
-                    .GroupBy(x => new DateTime(
-                        x.Date.Year,
-                        x.Date.Month,
-                        x.Date.Day,
-                        x.Date.Hour, 0, 0, x.Date.Kind))
+                var hourlyGroups = timeSeriesProductionData.TimeSeriesData
+                    .GroupBy(x => new DateTime(x.Date.Year, x.Date.Month, x.Date.Day, x.Date.Hour, 0, 0, x.Date.Kind))
                     .OrderBy(g => g.Key);
-                var newTimeseriesProductionData = new TimeseriesProductionData();
+
+                var newTimeSeriesProductionData = new TimeseriesProductionData();
                 foreach (var group in hourlyGroups)
                 {
                     var production = group.Sum(x => x.Production);
-                    newTimeseriesProductionData.TimeseriesData.Add(new ProductionData
+                    newTimeSeriesProductionData.TimeSeriesData.Add(new ProductionData
                     {
                         Date = group.Key,
                         Production = production
                     });
                 }
-                timeseriesProductionData = newTimeseriesProductionData;
+                timeSeriesProductionData = newTimeSeriesProductionData;
             }
+
             _logger.LogInformation("GetProductionData -> succeeded with request: {request}", JsonSerializer.Serialize(request));
-            return Ok(timeseriesProductionData);
+            return Ok(timeSeriesProductionData);
         }
 
         public enum TimeSeries
@@ -132,23 +136,18 @@ namespace IdentityJwtWeather.Controllers
             public ProductionType Type { get; set; } = ProductionType.Actual;
             public TimeSeries Granularity { get; set; } = TimeSeries.QuarterHourly; 
         }
-        public class TimeseriesWeatherData
+        public class TimeSeriesWeatherData
         {
-            public List<WeatherForcastData> TimeseriesData { get; set; } = new();
+            public List<WeatherForcastData> TimeSeriesData { get; set; } = new();
         }
         public class WeatherForcastData
         {
             public DateTime Date { get; set; }
             public int Clouds { get; set; }
         }
-        public class WeatherApiRequest
-        {
-            public TimeSeries Granularity { get; set; } = TimeSeries.QuarterHourly;
-            public TimeSpan TimeSpan { get; set; }
-        }
         public class TimeseriesProductionData
         {
-            public List<ProductionData> TimeseriesData { get; set; } = new();
+            public List<ProductionData> TimeSeriesData { get; set; } = new();
         }
         public class ProductionData
         {

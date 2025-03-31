@@ -7,8 +7,8 @@ namespace IdentityJwtWeather.Services
 {
     public interface IWeatherService
     {
-        Task<TimeseriesWeatherData> GetWeatherForecast(decimal latitude, decimal longitude);
-        public TimeseriesWeatherData ForcastDataParser(TimeseriesWeatherData rawData, TimeSpan timeSpan);
+        Task<TimeSeriesWeatherData> GetWeatherForecast(decimal latitude, decimal longitude);
+        public TimeSeriesWeatherData ForcastDataParser(TimeSeriesWeatherData rawData, TimeSpan timeSpan);
         public decimal GetSunshineInterpolation(DateTime dateTime);
     }
     public class WeatherApiService : IWeatherService
@@ -30,11 +30,11 @@ namespace IdentityJwtWeather.Services
             }
             _apiKey = configuration["Weather:ApiKey"]!;
         }
-        public async Task<TimeseriesWeatherData> GetWeatherForecast(decimal latitude, decimal longitude)
+        public async Task<TimeSeriesWeatherData> GetWeatherForecast(decimal latitude, decimal longitude)
         {
             var cacheKey = $"WeatherForecast_{latitude}_{longitude}";
 
-            if (_cache.TryGetValue(cacheKey, out TimeseriesWeatherData? cachedForecast))
+            if (_cache.TryGetValue(cacheKey, out TimeSeriesWeatherData? cachedForecast))
             {
                 if(cachedForecast != null)
                 {
@@ -44,7 +44,7 @@ namespace IdentityJwtWeather.Services
             }
 
             HttpClient client = new();
-            TimeseriesWeatherData forecast = new();
+            TimeSeriesWeatherData forecast = new();
             var url = $"forecast?lat={latitude}&lon={longitude}&appid={_apiKey}&units=metric";
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)
@@ -75,13 +75,13 @@ namespace IdentityJwtWeather.Services
                     Date = DateTimeOffset.FromUnixTimeSeconds(item.Dt).DateTime,
                     Clouds = item.CloudCoverage
                 };
-                forecast.TimeseriesData.Add(newWeatherData);
+                forecast.TimeSeriesData.Add(newWeatherData);
             }
             _cache.Set(cacheKey, forecast, TimeSpan.FromMinutes(120));
             _logger.LogInformation("WeatherApiService.GetWeatherForecast -> succeeded");
             return forecast;
         }
-        public TimeseriesWeatherData ForcastDataParser(TimeseriesWeatherData rawData, TimeSpan timeSpan)
+        public TimeSeriesWeatherData ForcastDataParser(TimeSeriesWeatherData rawData, TimeSpan timeSpan)
         {
             DateTime startTime, endTime;
             var now = DateTime.Now;
@@ -89,7 +89,7 @@ namespace IdentityJwtWeather.Services
             startTime = now;
             endTime = now.Add(timeSpan);
 
-            TimeseriesWeatherData parsedData = new();
+            TimeSeriesWeatherData parsedData = new();
 
             List<DateTime> intervals = new();
 
@@ -100,7 +100,7 @@ namespace IdentityJwtWeather.Services
 
             foreach (var item in intervals)
             {
-                var closestCloudData = rawData.TimeseriesData.OrderByDescending(x => x.Date).Where(x => x.Date.Day == item.Day && x.Date.Hour <= item.Hour).FirstOrDefault();
+                var closestCloudData = rawData.TimeSeriesData.OrderByDescending(x => x.Date).Where(x => x.Date.Day == item.Day && x.Date.Hour <= item.Hour).FirstOrDefault();
 
                 if (closestCloudData == null)
                 {
@@ -112,7 +112,7 @@ namespace IdentityJwtWeather.Services
                     Date = item,
                     Clouds = closestCloudData.Clouds
                 };
-                parsedData.TimeseriesData.Add(newWeatherForcastData);
+                parsedData.TimeSeriesData.Add(newWeatherForcastData);
             }
             return parsedData;
         }

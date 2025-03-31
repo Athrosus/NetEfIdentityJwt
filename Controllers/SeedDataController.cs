@@ -36,13 +36,15 @@ namespace IdentityJwtWeather.Controllers
                     Latitude = (decimal)(_random.NextDouble() * 180 - 90),
                     Longitude = (decimal)(_random.NextDouble() * 360 - 180)
                 };
+
                 _context.SolarPowerPlants.Add(plant);
             }
+
             await _context.SaveChangesAsync();
 
             // Generate production data for each plant for 5 days
-            DateTime productionStart = DateTime.Now.AddDays(-5);
-            DateTime productionEnd = DateTime.Now;
+            var productionStart = DateTime.Now.AddDays(-5);
+            var productionEnd = DateTime.Now;
             var plants = await _context.SolarPowerPlants.ToListAsync();
 
             foreach (var plant in plants)
@@ -56,9 +58,11 @@ namespace IdentityJwtWeather.Controllers
                         Date = current,
                         Production = production
                     };
+
                     _context.SolarPowerPlantProduction.Add(productionRecord);
                 }
             }
+
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("Data was seeded to database");

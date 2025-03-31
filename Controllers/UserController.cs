@@ -15,7 +15,10 @@ namespace IdentityJwtWeather.Controllers
         private readonly IJwtTokenService _jwtTokenService;
         private readonly ILogger<SolarPowerPlantsController> _logger;
 
-        public UserController(UserManager<IdentityUser> userManager, IJwtTokenService jwtTokenService, ILogger<SolarPowerPlantsController> logger)
+        public UserController(
+            UserManager<IdentityUser> userManager,
+            IJwtTokenService jwtTokenService,
+            ILogger<SolarPowerPlantsController> logger)
         {
             _userManager = userManager;
             _jwtTokenService = jwtTokenService;
@@ -31,7 +34,12 @@ namespace IdentityJwtWeather.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var user = new IdentityUser 
+            { 
+                UserName = model.Email, 
+                Email = model.Email 
+            };
+
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)

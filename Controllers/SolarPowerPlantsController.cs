@@ -38,6 +38,7 @@ namespace IdentityJwtWeather.Controllers
                 _logger.LogError("SolarPowerPlant/Get/{id} -> failed because a plant was not found", id);
                 return NotFound();
             }
+
             _logger.LogInformation("SolarPowerPlant/Get/{id} -> succeeded", id);
             return plant;
         }
