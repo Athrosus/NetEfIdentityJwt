@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 
 namespace IdentityJwtWeather.Controllers
 {
@@ -15,30 +16,34 @@ namespace IdentityJwtWeather.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWeatherService _weatherService;
+        private readonly ILogger<SolarPowerPlantsController> _logger;
 
-        public SolarPlantProductionController(ApplicationDbContext context, IWeatherService weatherService)
+        public SolarPlantProductionController(ApplicationDbContext context, IWeatherService weatherService, ILogger<SolarPowerPlantsController> logger)
         {
             _context = context;
             _weatherService = weatherService;
+            _logger = logger;
         }
 
         [HttpPost("GetProductionData")]
         [Authorize]
         public async Task<IActionResult> GetProductionData([FromBody] ProductionRequest request)
         {
-            DateTime now = DateTime.Now;
+            var now = DateTime.Now;
             TimeseriesWeatherData timeseriesWeatherData = new();
             TimeseriesProductionData timeseriesProductionData = new();
             WeatherApiRequest weatherApiRequest = new();
 
             if(request.TimeSpan > TimeSpan.FromDays(5))
             {
+                _logger.LogError("GetProductionData -> failed with BadRequest because request timespan was longer then 5 days: {request}", JsonSerializer.Serialize(request));
                 return BadRequest("Do to api limitations there we cannot fetch forecast or actual data past 5 days");
             }
 
             var plant = await _context.SolarPowerPlants.FindAsync(request.PlantId);
             if (plant == null)
             {
+                _logger.LogError("GetProductionData -> failed with NotFound because Solar Power Plant was not found by id: {request}", JsonSerializer.Serialize(request));
                 return NotFound();
             }
 
@@ -47,6 +52,7 @@ namespace IdentityJwtWeather.Controllers
                 var rawWeatherForecastData = await _weatherService.GetWeatherForecast(plant.Latitude, plant.Longitude);
                 if (rawWeatherForecastData == null)
                 {
+                    _logger.LogError("GetProductionData -> failed with BadRequest no weather data was available");
                     return BadRequest("No weather data available.");
                 }
                 timeseriesWeatherData = _weatherService.ForcastDataParser(rawWeatherForecastData, request.TimeSpan);
@@ -57,7 +63,7 @@ namespace IdentityJwtWeather.Controllers
                         _weatherService.GetSunshineInterpolation(WeatherData.Date) *
                         plant.InstalledPower;
 
-                    ProductionData newproductionDate = new ProductionData
+                    var newproductionDate = new ProductionData
                     {
                         Date = WeatherData.Date,
                         Production = production
@@ -70,6 +76,12 @@ namespace IdentityJwtWeather.Controllers
                 var productionData = await _context.SolarPowerPlantProduction
                     .Where(p => p.Date >= now - request.TimeSpan && p.Date <= now)
                     .ToListAsync();
+
+                if (productionData.Count == 0)
+                {
+                    _logger.LogError("GetProductionData -> failed with BadRequest no production data was found");
+                    return BadRequest("No production data found.");
+                }
 
                 timeseriesProductionData.TimeseriesData = productionData.Select(p => new ProductionData
                     {
@@ -99,9 +111,7 @@ namespace IdentityJwtWeather.Controllers
                 }
                 timeseriesProductionData = newTimeseriesProductionData;
             }
-
-
-
+            _logger.LogInformation("GetProductionData -> succeeded with request: {request}", JsonSerializer.Serialize(request));
             return Ok(timeseriesProductionData);
         }
 

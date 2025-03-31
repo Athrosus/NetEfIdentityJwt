@@ -13,10 +13,12 @@ namespace IdentityJwtWeather.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly Random _random = new Random();
+        private readonly ILogger<SolarPowerPlantsController> _logger;
 
-        public SeedDataController(ApplicationDbContext context)
+        public SeedDataController(ApplicationDbContext context, ILogger<SolarPowerPlantsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpPost("SeedData")]
@@ -59,6 +61,7 @@ namespace IdentityJwtWeather.Controllers
             }
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("Data was seeded to database");
             return Ok("Seeded 5 solar plants and 5 days of production data.");
         }
     }

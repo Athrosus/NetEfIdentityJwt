@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Core;
+using System.Text.Json;
 
 namespace IdentityJwtWeather.Controllers
 {
@@ -20,30 +22,26 @@ namespace IdentityJwtWeather.Controllers
             _logger = logger;
         }
 
-        // GET: api/SolarPowerPlant
-        // Retrieves all solar power plants.
         [HttpGet("GetAll")]
         public async Task<ActionResult<IEnumerable<SolarPowerPlant>>> GetAll()
         {
-            _logger.LogWarning("GetAll called at {Time}", DateTime.Now);
+            _logger.LogInformation("SolarPowerPlant/GetAll -> called at {Time}", DateTime.Now);
             return await _context.SolarPowerPlants.ToListAsync();
         }
 
-        // GET: api/SolarPowerPlant/5
-        // Retrieves a specific solar power plant by ID.
         [HttpGet("Get")]
         public async Task<ActionResult<SolarPowerPlant>> Get(int id)
         {
             var plant = await _context.SolarPowerPlants.FindAsync(id);
             if (plant == null)
             {
+                _logger.LogError("SolarPowerPlant/Get/{id} -> failed because a plant was not found", id);
                 return NotFound();
             }
+            _logger.LogInformation("SolarPowerPlant/Get/{id} -> succeeded", id);
             return plant;
         }
 
-        // POST: api/SolarPowerPlant
-        // Creates a new solar power plant.
         [Authorize]
         [HttpPost("Create")]
         public async Task<ActionResult<SolarPowerPlant>> Create(SolarPowerPlantObject plantObject)
@@ -60,11 +58,10 @@ namespace IdentityJwtWeather.Controllers
             _context.SolarPowerPlants.Add(plant);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("SolarPowerPlant/Create -> succeeded and made plant: {plant}", JsonSerializer.Serialize(plant));
             return CreatedAtAction(nameof(Get), new { id = plant.Id }, plant);
         }
 
-        // PUT: api/SolarPowerPlant/5
-        // Updates an existing solar power plant.
         [Authorize]
         [HttpPut("Update")]
         public async Task<ActionResult<SolarPowerPlant>> Update(int id, SolarPowerPlantObject plantObject)
@@ -72,6 +69,7 @@ namespace IdentityJwtWeather.Controllers
             var plant = await _context.SolarPowerPlants.FindAsync(id);
             if (plant == null)
             {
+                _logger.LogError("SolarPowerPlant/Update/{id} -> failed because a plant was not found", id);
                 return NotFound();
             }
 
@@ -89,18 +87,20 @@ namespace IdentityJwtWeather.Controllers
             {
                 if (!SolarPowerPlantExists(id))
                 {
+                    _logger.LogError("SolarPowerPlant/Update/{id} -> failed because the plant stopped existing during update", id);
                     return NotFound();
                 }
                 else
                 {
+                    _logger.LogError("SolarPowerPlant/Update/{id} -> failed because rows were changed unexpectedly during update", id);
                     throw;
                 }
             }
+
+            _logger.LogInformation("SolarPowerPlant/Update/{id} -> succeeded and made plant: {plant}", id, JsonSerializer.Serialize(plant));
             return Ok();
         }
 
-        // DELETE: api/SolarPowerPlant/5
-        // Deletes an existing solar power plant.
         [Authorize]
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(int id)
@@ -108,16 +108,17 @@ namespace IdentityJwtWeather.Controllers
             var plant = await _context.SolarPowerPlants.FindAsync(id);
             if (plant == null)
             {
+                _logger.LogError("SolarPowerPlant/Delete/{id} -> failed because a plant was not found", id);
                 return NotFound();
             }
 
             _context.SolarPowerPlants.Remove(plant);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation("SolarPowerPlant/Update/{id} -> succeeded in deleting the plant", id);
             return Ok();
         }
 
-        // Helper method to check if a plant exists.
         private bool SolarPowerPlantExists(int id)
         {
             return _context.SolarPowerPlants.Any(e => e.Id == id);
