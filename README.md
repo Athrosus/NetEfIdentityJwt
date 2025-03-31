@@ -15,10 +15,10 @@ It uses:
 
 ## Requirements
 
-- [.Net SDK 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-- [Visual Studio 2022 or higher](https://visualstudio.microsoft.com/downloads/)
-- [MS SQL DataBase](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
-- [A smile :) ](https://youtu.be/V1bFr2SWP1I?si=d70I6aEJDIJHk1R8)
+- <a href="https://dotnet.microsoft.com/en-us/download/dotnet/9.0" target="_blank">.Net SDK 9</a>
+- <a href="https://visualstudio.microsoft.com/downloads/" target="_blank">Visual Studio 2022 or higher</a>
+- <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">MS SQL DataBase</a>
+- <a href="https://youtu.be/V1bFr2SWP1I?si=d70I6aEJDIJHk1R8" target="_blank">A smile :)</a>
 
 ## Getting Started
 
