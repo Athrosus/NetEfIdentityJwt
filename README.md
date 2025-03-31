@@ -15,7 +15,7 @@ It uses:
 
 ## Requirements
 
-- <a href="https://dotnet.microsoft.com/en-us/download/dotnet/9.0" target="_blank">.Net SDK 9</a>
+- <a href="https://dotnet.microsoft.com/en-us/download/dotnet/9.0" target="_blank">.Net SDK 9</a> ( If you just installed it you might need to update Visual studio as well )
 - <a href="https://visualstudio.microsoft.com/downloads/" target="_blank">Visual Studio 2022 or higher</a>
 - <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">MS SQL DataBase</a>
 - <a href="https://youtu.be/V1bFr2SWP1I?si=d70I6aEJDIJHk1R8" target="_blank">A smile :)</a>
@@ -23,7 +23,7 @@ It uses:
 ## Getting Started
 
 1. **Open the project:** Use the `IdentityJwtWeather.sln` file.
-2. **Update the database:** Run `dotnet ef database update` in the Package Manager Console.  
+2. **Update the database:** First run `dotnet tool install --global dotnet-ef` if you don't have it, then run `dotnet ef database update` in the Package Manager Console.  
    The connection string is located in `appsettings.json` under `ConnectionStrings:DevelopmentConnection` if you need to change it.
 3. **Run the project:** Use the "https" setting (default). A console window should open and allow you to communicate with the server via a browser.
 4. **Navigate to the API:** Open your browser and go to [https://localhost:7199/scalar/v1](https://localhost:7199/scalar/v1).
