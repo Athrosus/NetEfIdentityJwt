@@ -8,7 +8,7 @@ It uses:
 - Identity
 - Entity Framework Core
 - JWT Authorization
-- Logging
+- Logging ( Daily rolling file, configurable in appsettings.json under Serilog:WriteTo:Args )
 - OpenWeatherMap API
 
 > **WARNING:** The JWT and OpenWeatherMap API keys are visible and public, so they will be deactivated after **01.05.2025**. After that point, you will need to provide your own API key locally!
