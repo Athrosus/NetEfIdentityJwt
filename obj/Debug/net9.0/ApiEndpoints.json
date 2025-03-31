@@ -180,7 +180,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "IdentityJwtWeather.Controllers.LoginModel",
+        "Type": "IdentityJwtWeather.Controllers.LoginRequest",
         "IsRequired": true
       }
     ],
@@ -196,7 +196,7 @@
     "Parameters": [
       {
         "Name": "model",
-        "Type": "IdentityJwtWeather.Controllers.RegisterModel",
+        "Type": "IdentityJwtWeather.Controllers.RegisterRequest",
         "IsRequired": true
       }
     ],

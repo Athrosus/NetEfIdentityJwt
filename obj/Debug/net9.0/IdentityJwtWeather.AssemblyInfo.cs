@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IdentityJwtWeather")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3ad89e6a22f330b23f0470a2da311b0acbf5fe4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e420522dd84ba39f77bd8bde2359b5272e20e5b8")]
 [assembly: System.Reflection.AssemblyProductAttribute("IdentityJwtWeather")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IdentityJwtWeather")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
